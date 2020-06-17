@@ -305,6 +305,17 @@ class Stock(_IEXBase):
 
         return self._get_endpoint("estimates", fmt_p=fmt_p)
 
+    def get_analyst_recommendations(self):
+        def fmt_p(out):
+            data = {
+                (symbol, sheet["consensusStartDate"]): sheet
+                for symbol in out
+                for sheet in out[symbol]["recommendation-trends"]
+            }
+            return pd.DataFrame(data)
+
+        return self._get_endpoint("recommendation-trends", fmt_p=fmt_p)
+
     def get_financials(self, **kwargs):
         """Financials
 
